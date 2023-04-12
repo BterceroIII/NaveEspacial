@@ -24,6 +24,13 @@ void Game()
     while (jugar)
     {
         nave.Mover(2);
+        nave.Disparar();
+        if (nave.Vida <= 0)
+        {
+            jugar = false;
+            nave.Muerte();
+        }
+        
     }
 }
 
