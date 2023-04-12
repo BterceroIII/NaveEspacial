@@ -95,6 +95,29 @@ namespace NaveGame.Models
             distancia.Y *= velocidad;
             Posicion = new Point(Posicion.X + distancia.X, Posicion.Y + distancia.Y);
         }
+
+        public void Colisiones(Point distancia)
+        {
+           Point posicionAux = new Point(Posicion.X + distancia.X, Posicion.Y + distancia.Y);
+            if (posicionAux.X <= VentanaC.LimiteSuperior.X)
+            {
+                posicionAux.X = VentanaC.LimiteSuperior.X + 1;
+            }
+            if (posicionAux.X + 6 >= VentanaC.LimiteInferior.X)
+            {
+                posicionAux.X = VentanaC.LimiteInferior.X - 7;
+            }
+            if (posicionAux.Y <= VentanaC.LimiteSuperior.Y)
+            {
+                posicionAux.Y = VentanaC.LimiteSuperior.Y + 1;
+            }
+            if (posicionAux.Y + 2 >= VentanaC.LimiteInferior.Y)
+            {
+                posicionAux.Y = VentanaC.LimiteInferior.Y - 3;
+            }
+
+            Posicion = posicionAux;
+        }
          
         // Metodo Mover que llama a otros metodos para su ejecucion
         public void Mover(int velocidad)
@@ -104,7 +127,7 @@ namespace NaveGame.Models
                 Borrar(); // Elimina la posicion anterior y el dibujo de la nave
                 Point distancia = new Point();
                 Teclado(ref distancia, velocidad);
-
+                Colisiones(distancia);
                 Dibujar(); // Cada ves que se mueva la nave se dibuja de nuevo con la posicion actual
             }
         }
