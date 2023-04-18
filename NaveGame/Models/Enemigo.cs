@@ -13,6 +13,11 @@ namespace NaveGame.Models
     }
     internal class Enemigo
     {
+        enum Direccion
+        {
+            Derecha, Izquierda, Arriba, Abajo
+        }
+
         public bool Vivo { get; set; }
         public float Vida { get; set; }
         public Point Posicion { get; set; }
@@ -20,6 +25,11 @@ namespace NaveGame.Models
         public ConsoleColor Color { get; set; }
         public TipoEnemigo TipoEnemigoE { get; set; }
         public List<Point> PosicionesEnemigo { get; set; }
+
+        private Direccion _direccion;
+        private DateTime _tiempoDireccion;
+        private float _tiempoDireccionAleatorio;
+        private DateTime _tiempoMovimiento;
 
         public Enemigo(Point posicion, Ventana ventana, ConsoleColor color, TipoEnemigo tipoEnemigoE)
         {
@@ -29,6 +39,10 @@ namespace NaveGame.Models
             VentanaC = ventana;
             Color = color;
             TipoEnemigoE = tipoEnemigoE;
+            _direccion = Direccion.Derecha;
+            _tiempoDireccion = DateTime.Now;
+            _tiempoDireccionAleatorio = 1000;
+            _tiempoMovimiento = DateTime.Now;
             PosicionesEnemigo = new List<Point>();
         }
 
@@ -117,6 +131,106 @@ namespace NaveGame.Models
                 Console.SetCursorPosition(item.X, item.Y);
                 Console.Write(" ");
             }
+        }
+
+        public void Mover()
+        {
+            int tiempo = 30;
+            if (TipoEnemigoE == TipoEnemigo.Boss)
+            {
+                tiempo = 20;
+            }
+            if (DateTime.Now > _tiempoMovimiento.AddMilliseconds(tiempo))
+            {
+                Borrar();
+                DireccionAleatoria();
+                Point posicionAux = Posicion;
+                Movimiento(ref posicionAux);
+                Colisiones(posicionAux);
+                Dibujar();
+                _tiempoMovimiento = DateTime.Now;
+            }
+            
+        }
+
+        public void Colisiones(Point posicionAux)
+        {
+            int ancho = 3;
+            if (TipoEnemigoE == TipoEnemigo.Boss)
+            {
+                ancho = 7;
+            }
+
+            if (posicionAux.X <= VentanaC.LimiteSuperior.X)
+            {
+                _direccion = Direccion.Derecha;
+                posicionAux.X = VentanaC.LimiteSuperior.X + 1;
+            }
+            if (posicionAux.X + ancho >= VentanaC.LimiteInferior.X)
+            {
+                _direccion = Direccion.Izquierda;
+                posicionAux.X = VentanaC.LimiteInferior.X - 1 - ancho;
+            }
+            if (posicionAux.Y <= VentanaC.LimiteSuperior.Y)
+            {
+                _direccion = Direccion.Abajo;
+                posicionAux.Y = VentanaC.LimiteSuperior.Y + 1;
+            }
+            if (posicionAux.Y + 2 >= VentanaC.LimiteSuperior.Y + 15)
+            {
+                _direccion = Direccion.Arriba;
+                posicionAux.Y = VentanaC.LimiteSuperior.Y + 15 - 2;
+            }
+
+            Posicion = posicionAux;
+        }
+
+        public void Movimiento(ref Point posicionAux)
+        {
+            switch (_direccion)
+            {
+                case Direccion.Derecha:
+                    posicionAux.X += 1;
+                    break;
+                case Direccion.Izquierda:
+                    posicionAux.X -= 1;
+                    break;
+                case Direccion.Arriba:
+                    posicionAux.Y -= 1;
+                    break;
+                case Direccion.Abajo:
+                    posicionAux.Y += 1;
+                    break;
+            }
+        }
+
+        public void DireccionAleatoria()
+        {
+            if (DateTime.Now > _tiempoDireccion.AddMilliseconds(_tiempoDireccionAleatorio))
+            {
+                Random random = new Random();
+                int numRandom = random.Next(1, 5); //es de 1 a 4 pero se le suma uno mas porque el ramdom no involucra el numero final
+
+                switch (numRandom)
+                {
+                    case 1:
+                        _direccion = Direccion.Derecha;
+                        break;
+                    case 2:
+                        _direccion = Direccion.Izquierda;
+                        break;
+                    case 3:
+                        _direccion = Direccion.Arriba;
+                        break;
+                    case 4:
+                        _direccion = Direccion.Abajo;
+                        break;
+                }
+
+                _tiempoDireccion = DateTime.Now;
+                _tiempoDireccionAleatorio = random.Next(1000,2000);
+            }
+            
         }
     }
 }

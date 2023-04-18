@@ -23,13 +23,16 @@ void Iniciar()
     nave.Dibujar();
     enemigo1.Dibujar();
     enemigo2.Dibujar();
-    boss.Dibujar();
+
 }
 
 void Game()
 {
     while (jugar)
     {
+        enemigo1.Mover();
+        enemigo2.Mover();
+
         nave.Mover(2);
         nave.Disparar();
         if (nave.Vida <= 0)
