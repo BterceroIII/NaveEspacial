@@ -134,6 +134,60 @@ namespace NaveGame.Models
             PosicionesEnemigo.Add(new Point(x + 7, y + 2));
         }
 
+        public void Muerte()
+        {
+            if (TipoEnemigoE == TipoEnemigo.Normal)
+            {
+                MuerteNormal();
+            }
+            if (TipoEnemigoE == TipoEnemigo.Boss)
+            {
+                MuerteBoss();
+            }
+        }
+
+        public void MuerteBoss()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            foreach (Point item in PosicionesEnemigo)
+            {
+                Console.SetCursorPosition(item.X, item.Y);
+                Console.Write("▓");
+                Thread.Sleep(200);
+            }
+            foreach (Point item in PosicionesEnemigo)
+            {
+                Console.SetCursorPosition(item.X, item.Y);
+                Console.Write("  ");
+                Thread.Sleep(200);
+            }
+            PosicionesEnemigo.Clear();
+            foreach (Bala item in Balas)
+            {
+                item.Borrar();
+            }
+        }
+
+        public void MuerteNormal()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            int x = Posicion.X;
+            int y = Posicion.Y;
+
+            Console.SetCursorPosition(x + 1, y);
+            Console.Write("▄▄Zzz");
+            Console.SetCursorPosition(x, y + 1);
+            Console.Write("████");
+            Console.SetCursorPosition(x, y + 2);
+            Console.Write("▀  ▀");
+            PosicionesEnemigo.Clear();
+            foreach (Bala item in Balas)
+            {
+                item.Borrar();
+            }
+            Balas.Clear();
+        }
+
         public void Borrar()
         {
             foreach (Point item in PosicionesEnemigo)
@@ -145,6 +199,12 @@ namespace NaveGame.Models
 
         public void Mover()
         {
+            if (!Vivo)
+            {
+                Muerte();
+                return;
+            }
+
             int tiempo = 30;
             if (TipoEnemigoE == TipoEnemigo.Boss)
             {
@@ -155,13 +215,13 @@ namespace NaveGame.Models
                 Borrar();
                 DireccionAleatoria();
                 Point posicionAux = Posicion;
-                //Movimiento(ref posicionAux);
+                Movimiento(ref posicionAux);
                 Colisiones(posicionAux);
                 Dibujar();
                 _tiempoMovimiento = DateTime.Now;
             }
-            //CrearBalas();
-            //Disparar();
+            CrearBalas();
+            Disparar();
         }
 
         public void Colisiones(Point posicionAux)

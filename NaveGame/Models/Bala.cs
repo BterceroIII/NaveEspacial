@@ -101,6 +101,7 @@ namespace NaveGame.Models
                                     {
                                         enemigo.Vida = 0;
                                         enemigo.Vivo = false;
+                                        enemigo.Muerte();
                                     }
                                     return true;
                                 }
@@ -127,6 +128,7 @@ namespace NaveGame.Models
                                         {
                                             enemigo.Vida = 0;
                                             enemigo.Vivo = false;
+                                            enemigo.Muerte();
                                         }
                                         return true;
                                     }

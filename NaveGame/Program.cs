@@ -33,6 +33,9 @@ void Game()
 {
     while (jugar)
     {
+        boss.Mover();
+        boss.Informacion(140);
+
         enemigo1.Mover();
         enemigo1.Informacion(100);
         enemigo2.Mover();
