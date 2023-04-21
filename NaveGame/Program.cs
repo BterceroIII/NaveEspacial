@@ -23,6 +23,9 @@ void Iniciar()
     nave.Dibujar();
     enemigo1.Dibujar();
     enemigo2.Dibujar();
+    nave.enemigos.Add(enemigo1);
+    nave.enemigos.Add(enemigo2);
+    nave.enemigos.Add(boss);
 
 }
 
@@ -50,4 +53,3 @@ void Game()
 
 Iniciar();
 Game();
-Console.ReadKey();

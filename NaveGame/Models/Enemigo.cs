@@ -27,6 +27,7 @@ namespace NaveGame.Models
         public Nave NaveC { get; set; }
         public List<Point> PosicionesEnemigo { get; set; }
         public List<Bala> Balas { get; set; }
+        
 
         private Direccion _direccion;
         private DateTime _tiempoDireccion;
@@ -52,6 +53,7 @@ namespace NaveGame.Models
             _tiempoBala = DateTime.Now;
             _tiempoDisparoAleatorio = 200;
              NaveC = nave;
+            
         }
 
         public void Dibujar()
@@ -153,13 +155,13 @@ namespace NaveGame.Models
                 Borrar();
                 DireccionAleatoria();
                 Point posicionAux = Posicion;
-                Movimiento(ref posicionAux);
+                //Movimiento(ref posicionAux);
                 Colisiones(posicionAux);
                 Dibujar();
                 _tiempoMovimiento = DateTime.Now;
             }
-            CrearBalas();
-            Disparar();
+            //CrearBalas();
+            //Disparar();
         }
 
         public void Colisiones(Point posicionAux)

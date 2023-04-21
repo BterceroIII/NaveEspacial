@@ -18,6 +18,7 @@ namespace NaveGame.Models
         public float SobreCarga { get; set; }
         public bool SobreCargaCondicion { get; set; }
         public float BalaEspecial { get; set; }
+        public List<Enemigo> enemigos { get; set; }
 
         public Nave( Point posicion, ConsoleColor color, Ventana ventana )
         {
@@ -27,6 +28,7 @@ namespace NaveGame.Models
             VentanaC = ventana;
             PosicionesNave = new List<Point>();
             Balas = new List<Bala>();
+            enemigos = new List<Enemigo>();
         }
 
         // Dibuja la nave en la consola
@@ -157,7 +159,7 @@ namespace NaveGame.Models
         {
             for (int i = 0; i < Balas.Count; i++)
             {
-                if (Balas[i].Mover(1, VentanaC.LimiteSuperior.Y))
+                if (Balas[i].Mover(1, VentanaC.LimiteSuperior.Y, enemigos))
                 {
                     Balas.Remove(Balas[i]);
                 }
