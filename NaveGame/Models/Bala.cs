@@ -9,7 +9,7 @@ namespace NaveGame.Models
 {
     public enum TipoBala
     {
-        Normal, Especial
+        Normal, Especial,Enemigo
     }
 
     internal class Bala
@@ -59,6 +59,11 @@ namespace NaveGame.Models
                     PosicionesBala.Add(new Point(x + 2, y + 1));
                     PosicionesBala.Add(new Point(x + 1, y + 2));
                     break;
+                case TipoBala.Enemigo: 
+                    Console.SetCursorPosition(x, y);
+                    Console.Write("█");
+                    PosicionesBala.Add(new Point(x, y));
+                    break;
             }
         }
 
@@ -94,6 +99,13 @@ namespace NaveGame.Models
                             return true;
                         }
                         break;
+                    case TipoBala.Enemigo:
+                        Posicion = new Point(Posicion.X, Posicion.Y + velocidad);
+                        if (Posicion.Y >= limite)
+                        {
+                            return true;
+                        }
+                            break;
                 }
 
                 Dibujar();

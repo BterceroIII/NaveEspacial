@@ -25,11 +25,14 @@ namespace NaveGame.Models
         public ConsoleColor Color { get; set; }
         public TipoEnemigo TipoEnemigoE { get; set; }
         public List<Point> PosicionesEnemigo { get; set; }
+        public List<Bala> Balas { get; set; }
 
         private Direccion _direccion;
         private DateTime _tiempoDireccion;
         private float _tiempoDireccionAleatorio;
+        private float _tiempoDisparoAleatorio;
         private DateTime _tiempoMovimiento;
+        private DateTime _tiempoBala;
 
         public Enemigo(Point posicion, Ventana ventana, ConsoleColor color, TipoEnemigo tipoEnemigoE)
         {
@@ -44,6 +47,9 @@ namespace NaveGame.Models
             _tiempoDireccionAleatorio = 1000;
             _tiempoMovimiento = DateTime.Now;
             PosicionesEnemigo = new List<Point>();
+            Balas = new List<Bala>();
+            _tiempoBala = DateTime.Now;
+            _tiempoDisparoAleatorio = 200;
         }
 
         public void Dibujar()
@@ -150,7 +156,8 @@ namespace NaveGame.Models
                 Dibujar();
                 _tiempoMovimiento = DateTime.Now;
             }
-            
+            CrearBalas();
+            Disparar();
         }
 
         public void Colisiones(Point posicionAux)
@@ -201,12 +208,12 @@ namespace NaveGame.Models
                 case Direccion.Abajo:
                     posicionAux.Y += 1;
                     break;
-            }
+            }  
         }
 
         public void DireccionAleatoria()
         {
-            if (DateTime.Now > _tiempoDireccion.AddMilliseconds(_tiempoDireccionAleatorio))
+            if (DateTime.Now > _tiempoDireccion.AddMilliseconds(_tiempoDireccionAleatorio) && (_direccion == Direccion.Derecha || _direccion == Direccion.Izquierda))
             {
                 Random random = new Random();
                 int numRandom = random.Next(1, 5); //es de 1 a 4 pero se le suma uno mas porque el ramdom no involucra el numero final
@@ -230,7 +237,62 @@ namespace NaveGame.Models
                 _tiempoDireccion = DateTime.Now;
                 _tiempoDireccionAleatorio = random.Next(1000,2000);
             }
-            
+
+            if (DateTime.Now > _tiempoDireccion.AddMilliseconds(80) && (_direccion == Direccion.Arriba || _direccion == Direccion.Abajo))
+            {
+                Random random = new Random();
+                int numRandom = random.Next(1, 3); //es de 1 a 4 pero se le suma uno mas porque el ramdom no involucra el numero final
+
+                switch (numRandom)
+                {
+                    case 1:
+                        _direccion = Direccion.Derecha;
+                        break;
+                    case 2:
+                        _direccion = Direccion.Izquierda;
+                        break;
+                }
+
+                _tiempoDireccion = DateTime.Now;
+                _tiempoDireccionAleatorio = random.Next(1000, 2000);
+            }
+
+        }
+
+        public void CrearBalas()
+        {
+            if (DateTime.Now > _tiempoBala.AddMilliseconds(_tiempoDisparoAleatorio))
+            {
+                Random random = new Random();
+
+                if (TipoEnemigoE == TipoEnemigo.Normal)
+                {
+                    Bala bala = new Bala(new Point(Posicion.X + 1, Posicion.Y + 2), Color, TipoBala.Enemigo);
+
+                    Balas.Add(bala);
+                    _tiempoDisparoAleatorio = random.Next(200, 500);
+                }
+                if (TipoEnemigoE == TipoEnemigo.Boss)
+                {
+                    Bala bala = new Bala(new Point(Posicion.X + 4, Posicion.Y + 2), Color, TipoBala.Enemigo);
+
+                    Balas.Add(bala);
+                    _tiempoDisparoAleatorio = random.Next(100, 150);
+                }
+                _tiempoBala = DateTime.Now;
+            }
+           
+        }
+
+        public void Disparar()
+        {
+            for (int i = 0; i < Balas.Count; i++)
+            {
+                if (Balas[i].Mover(1, VentanaC.LimiteInferior.Y))
+                {
+                    Balas.Remove(Balas[i]);
+                }
+            }
         }
     }
 }
