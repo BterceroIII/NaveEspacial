@@ -294,5 +294,12 @@ namespace NaveGame.Models
                 }
             }
         }
+
+        public void Informacion(int distanciaX)
+        {
+            Console.ForegroundColor = Color;
+            Console.SetCursorPosition(VentanaC.LimiteSuperior.X + distanciaX, VentanaC.LimiteSuperior.Y - 1);
+            Console.Write($"Enemigo: {(int)Vida} % ");
+        }
     }
 }

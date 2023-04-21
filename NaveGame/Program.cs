@@ -31,7 +31,9 @@ void Game()
     while (jugar)
     {
         enemigo1.Mover();
+        enemigo1.Informacion(100);
         enemigo2.Mover();
+        enemigo2.Informacion(120);
 
         nave.Mover(2);
         nave.Disparar();
