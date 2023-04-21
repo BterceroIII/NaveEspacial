@@ -24,6 +24,7 @@ namespace NaveGame.Models
         public Ventana VentanaC { get; set; }
         public ConsoleColor Color { get; set; }
         public TipoEnemigo TipoEnemigoE { get; set; }
+        public Nave NaveC { get; set; }
         public List<Point> PosicionesEnemigo { get; set; }
         public List<Bala> Balas { get; set; }
 
@@ -34,7 +35,7 @@ namespace NaveGame.Models
         private DateTime _tiempoMovimiento;
         private DateTime _tiempoBala;
 
-        public Enemigo(Point posicion, Ventana ventana, ConsoleColor color, TipoEnemigo tipoEnemigoE)
+        public Enemigo(Point posicion, Ventana ventana, ConsoleColor color, TipoEnemigo tipoEnemigoE, Nave nave)
         {
             Vivo = true;
             Vida = 100;
@@ -50,6 +51,7 @@ namespace NaveGame.Models
             Balas = new List<Bala>();
             _tiempoBala = DateTime.Now;
             _tiempoDisparoAleatorio = 200;
+             NaveC = nave;
         }
 
         public void Dibujar()
@@ -288,7 +290,7 @@ namespace NaveGame.Models
         {
             for (int i = 0; i < Balas.Count; i++)
             {
-                if (Balas[i].Mover(1, VentanaC.LimiteInferior.Y))
+                if (Balas[i].Mover(1, VentanaC.LimiteInferior.Y, NaveC))
                 {
                     Balas.Remove(Balas[i]);
                 }
