@@ -9,7 +9,7 @@ namespace NaveGame.Models
 {
     enum TipoEnemigo
     {
-        Normal, Boss
+        Normal, Boss, Menu
     }
     internal class Enemigo
     {
@@ -65,6 +65,9 @@ namespace NaveGame.Models
                     break;
                 case TipoEnemigo.Boss:
                     DibujoBoss();
+                    break;
+                case TipoEnemigo.Menu:
+                    DibujoNormal();
                     break;
                 
             }
@@ -220,8 +223,11 @@ namespace NaveGame.Models
                 Dibujar();
                 _tiempoMovimiento = DateTime.Now;
             }
-            CrearBalas();
-            Disparar();
+            if (TipoEnemigoE != TipoEnemigo.Menu)
+            {
+                CrearBalas();
+                Disparar();
+            }
         }
 
         public void Colisiones(Point posicionAux)
@@ -230,6 +236,13 @@ namespace NaveGame.Models
             if (TipoEnemigoE == TipoEnemigo.Boss)
             {
                 ancho = 7;
+            }
+
+            int limiteInferior = VentanaC.LimiteInferior.Y + 15;
+
+            if (TipoEnemigoE == TipoEnemigo.Menu)
+            {
+                limiteInferior = VentanaC.LimiteInferior.Y - 1;
             }
 
             if (posicionAux.X <= VentanaC.LimiteSuperior.X)
@@ -247,10 +260,10 @@ namespace NaveGame.Models
                 _direccion = Direccion.Abajo;
                 posicionAux.Y = VentanaC.LimiteSuperior.Y + 1;
             }
-            if (posicionAux.Y + 2 >= VentanaC.LimiteSuperior.Y + 15)
+            if (posicionAux.Y + 2 >= limiteInferior)
             {
                 _direccion = Direccion.Arriba;
-                posicionAux.Y = VentanaC.LimiteSuperior.Y + 15 - 2;
+                posicionAux.Y = limiteInferior - 2;
             }
 
             Posicion = posicionAux;
