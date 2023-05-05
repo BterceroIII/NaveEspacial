@@ -64,5 +64,21 @@ namespace NaveGame.Models
             Console.Write("╝");
 
         }
+        
+        public void VentanaPeligro()
+        {
+            Console.Clear();
+            DibujarMarco();
+            for (int i = 0; i < 6; i++)
+            {
+                Console.SetCursorPosition(LimiteInferior.X / 2 - 5, LimiteInferior.Y / 2);
+                Console.Write("PELIGRO!!!");
+                Thread.Sleep(200);
+                Console.SetCursorPosition(LimiteInferior.X / 2 - 5, LimiteInferior.Y / 2);
+                Console.Write("        ");
+                Thread.Sleep(200);
+            }
+        }
+        
     }
 }

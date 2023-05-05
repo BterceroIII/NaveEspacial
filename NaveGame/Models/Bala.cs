@@ -78,7 +78,7 @@ namespace NaveGame.Models
 
         public bool Mover(int velocidad, int limite, List<Enemigo> enemigos)
         {
-            if (DateTime.Now > _tiempo.AddMilliseconds(30))
+            if (DateTime.Now > _tiempo.AddMilliseconds(20))
             {
                 Borrar();
 
@@ -149,7 +149,7 @@ namespace NaveGame.Models
 
         public bool Mover(int velocidad, int limite, Nave nave)
         {
-            if (DateTime.Now > _tiempo.AddMilliseconds(30))
+            if (DateTime.Now > _tiempo.AddMilliseconds(20))
             {
                 Borrar();
 
@@ -164,6 +164,8 @@ namespace NaveGame.Models
                     if (posicionN.X == Posicion.X && posicionN.Y == Posicion.Y)
                     {
                         nave.Vida -= 5;
+                        nave.ColorAux = Color;
+                        nave.TiempoColision = DateTime.Now;
                         return true;
                     }
                 }

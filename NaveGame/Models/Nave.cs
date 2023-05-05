@@ -19,6 +19,8 @@ namespace NaveGame.Models
         public bool SobreCargaCondicion { get; set; }
         public float BalaEspecial { get; set; }
         public List<Enemigo> enemigos { get; set; }
+        public ConsoleColor ColorAux { get; set; }
+        public DateTime TiempoColision { get; set; }
 
         public Nave( Point posicion, ConsoleColor color, Ventana ventana )
         {
@@ -29,12 +31,22 @@ namespace NaveGame.Models
             PosicionesNave = new List<Point>();
             Balas = new List<Bala>();
             enemigos = new List<Enemigo>();
+            ColorAux = color;
+            TiempoColision = DateTime.Now;
         }
 
         // Dibuja la nave en la consola
         public void Dibujar()
         {
-            Console.ForegroundColor = Color;
+            if (DateTime.Now > TiempoColision.AddMilliseconds(1000))
+            {
+                Console.ForegroundColor = Color;
+            }
+            else
+            {
+                Console.ForegroundColor = ColorAux;
+            }
+
             int x = Posicion.X;
             int y = Posicion.Y;
 
@@ -116,7 +128,7 @@ namespace NaveGame.Models
                     ConsoleColor.Yellow, TipoBala.Normal);
 
                     Balas.Add(bala);
-                    SobreCarga += 1.2f;
+                    SobreCarga += 0.8f;
                     if (SobreCarga >= 100)
                     {
                         SobreCargaCondicion = true;
@@ -202,7 +214,7 @@ namespace NaveGame.Models
             }
             else
             {
-                SobreCarga -= 0.0007f;
+                SobreCarga -= 0.009f;
             }
 
             if (SobreCarga <= 50)
@@ -231,7 +243,7 @@ namespace NaveGame.Models
             }
             else
             {
-                BalaEspecial += 0.0077f;
+                BalaEspecial += 0.009f;
             }
 
         }
@@ -245,8 +257,9 @@ namespace NaveGame.Models
                 Point distancia = new Point();
                 Teclado(ref distancia, velocidad);
                 Colisiones(distancia);
-                Dibujar(); // Cada ves que se mueva la nave se dibuja de nuevo con la posicion actual
             }
+
+            Dibujar(); // Cada ves que se mueva la nave se dibuja de nuevo con la posicion actual
             Informacion();
         }
 
