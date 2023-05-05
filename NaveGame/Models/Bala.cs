@@ -9,7 +9,7 @@ namespace NaveGame.Models
 {
     public enum TipoBala
     {
-        Normal, Especial
+        Normal, Especial,Enemigo, Menu
     }
 
     internal class Bala
@@ -59,6 +59,16 @@ namespace NaveGame.Models
                     PosicionesBala.Add(new Point(x + 2, y + 1));
                     PosicionesBala.Add(new Point(x + 1, y + 2));
                     break;
+                case TipoBala.Enemigo: 
+                    Console.SetCursorPosition(x, y);
+                    Console.Write("█");
+                    PosicionesBala.Add(new Point(x, y));
+                    break;
+                case TipoBala.Menu:
+                    Console.SetCursorPosition(x, y);
+                    Console.Write('!');
+                    PosicionesBala.Add(new Point(x,y));
+                    break;
             }
         }
 
@@ -71,9 +81,9 @@ namespace NaveGame.Models
             }
         }
 
-        public bool Mover(int velocidad, int limite)
+        public bool Mover(int velocidad, int limite, List<Enemigo> enemigos)
         {
-            if (DateTime.Now > _tiempo.AddMilliseconds(30))
+            if (DateTime.Now > _tiempo.AddMilliseconds(20))
             {
                 Borrar();
 
@@ -85,6 +95,23 @@ namespace NaveGame.Models
                         {
                             return true;
                         }
+                        foreach (Enemigo enemigo in enemigos)
+                        {
+                            foreach (Point posicionE in enemigo.PosicionesEnemigo)
+                            {
+                                if (posicionE.X == Posicion.X && posicionE.Y == Posicion.Y)
+                                {
+                                    enemigo.Vida -= 7;
+                                    if (enemigo.Vida <= 0)
+                                    {
+                                        enemigo.Vida = 0;
+                                        enemigo.Vivo = false;
+                                        enemigo.Muerte();
+                                    }
+                                    return true;
+                                }
+                            }
+                        }
                         break;
 
                     case TipoBala.Especial:
@@ -93,7 +120,28 @@ namespace NaveGame.Models
                         {
                             return true;
                         }
+                        foreach (Enemigo enemigo in enemigos)
+                        {
+                            foreach (Point posicionE in enemigo.PosicionesEnemigo)
+                            {
+                                foreach (Point posicionB in PosicionesBala)
+                                {
+                                    if (posicionE.X == posicionB.X && posicionE.Y == posicionB.Y)
+                                    {
+                                        enemigo.Vida -= 40;
+                                        if (enemigo.Vida <= 0)
+                                        {
+                                            enemigo.Vida = 0;
+                                            enemigo.Vivo = false;
+                                            enemigo.Muerte();
+                                        }
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
                         break;
+                    
                 }
 
                 Dibujar();
@@ -103,5 +151,58 @@ namespace NaveGame.Models
             
             return false;
         }
+
+        public bool Mover(int velocidad, int limite, Nave nave)
+        {
+            if (DateTime.Now > _tiempo.AddMilliseconds(20))
+            {
+                Borrar();
+
+                Posicion = new Point(Posicion.X, Posicion.Y + velocidad);
+                if (Posicion.Y >= limite)
+                {
+                    return true;
+                }
+
+                foreach (Point posicionN in nave.PosicionesNave)
+                {
+                    if (posicionN.X == Posicion.X && posicionN.Y == Posicion.Y)
+                    {
+                        nave.Vida -= 5;
+                        nave.ColorAux = Color;
+                        nave.TiempoColision = DateTime.Now;
+                        return true;
+                    }
+                }
+
+                Dibujar();
+                _tiempo = DateTime.Now;
+            }
+
+
+            return false;
+        }
+
+        public bool Mover(int velocidad, int limite)
+        {
+            if (DateTime.Now > _tiempo.AddMilliseconds(20))
+            {
+                Borrar();
+
+                Posicion = new Point(Posicion.X, Posicion.Y - velocidad);
+                if (Posicion.Y <= limite)
+                {
+                    return true;
+                }
+
+                Dibujar();
+                _tiempo = DateTime.Now;
+            }
+
+
+            return false;
+        }
+
+
     }
 }
